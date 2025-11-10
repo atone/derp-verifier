@@ -37,10 +37,6 @@ async def get_public_keys():
 
 
 async def verify_handler(request: web.Request) -> web.Response:
-    content_type = request.headers.get('Content-Type', '')
-    if 'application/json' not in content_type:
-        return web.Response(status=404)
-
     try:
         data = await request.json()
     except Exception:
