@@ -14,4 +14,6 @@ COPY main.py .
 
 EXPOSE 8080
 
+ENV PYTHONUNBUFFERED=1
+
 CMD ["python", "main.py"]
