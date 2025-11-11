@@ -27,12 +27,15 @@ jobs:
 
       - name: Extract image name
         id: meta
-        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/$(basename ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        run: |
+          REPO_NAME=$(basename ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+          echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/$REPO_NAME" >> $GITHUB_ENV
 
       - name: Build and tag Docker image via docker-compose
         run: |
-          docker build -t $(basename ${{ github.repository }} | tr '[:upper:]' '[:lower:]') .
-          docker tag $(basename ${{ github.repository }} | tr '[:upper:]' '[:lower:]') $IMAGE_NAME:latest
+          docker build -t $REPO_NAME .
+          docker tag $REPO_NAME $IMAGE_NAME:latest
 
       - name: Push image to GHCR
         run: |
