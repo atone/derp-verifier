@@ -55,31 +55,41 @@ async def get_public_keys():
     return public_keys
 
 
+def deny_response() -> web.Response:
+    return web.Response(text="404: Not Found", status=404)
+
+
 async def verify_handler(request: web.Request) -> web.Response:
+    if request.method != 'POST':
+        return deny_response()
+
     try:
         data = await request.json()
     except Exception:
-        return web.Response(status=404)
+        return deny_response()
 
     if not isinstance(data, dict):
-        return web.Response(status=404)
+        return deny_response()
+
     if 'NodePublic' not in data or 'Source' not in data:
-        return web.Response(status=404)
+        return deny_response()
 
     node_public = data['NodePublic']
     source = data['Source']
 
     public_keys = await get_public_keys()
+
     if node_public in public_keys:
         log("info", f"Allowing access for NodePublic: {node_public}, Source: {source}")
         return web.json_response({'Allow': True})
+
     log("warning", f"Denying access for NodePublic: {node_public}, Source: {source}")
     return web.json_response({'Allow': False})
 
 
 def init_app() -> web.Application:
     app = web.Application()
-    app.router.add_post('/verify', verify_handler)
+    app.router.add_route('*', '/verify', verify_handler)
     return app
 
 
