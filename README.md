@@ -33,7 +33,7 @@ docker run -d --name derp-verifier -p 8080:8080 derp-verifier
 预构建镜像也可从 GitHub Container Registry 获取：
 
 ```bash
-docker pull ghcr.io/<owner>/derp-verifier:latest
+docker pull ghcr.io/atone/derp-verifier:latest
 ```
 
 ## API
