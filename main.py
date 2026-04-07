@@ -1,5 +1,6 @@
 import json
 import asyncio
+import argparse
 from aiohttp import web
 
 
@@ -94,5 +95,10 @@ def init_app() -> web.Application:
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Tailscale DERP node verifier')
+    parser.add_argument('--host', default='0.0.0.0', help='listen address (default: 0.0.0.0)')
+    parser.add_argument('--port', type=int, default=8080, help='listen port (default: 8080)')
+    args = parser.parse_args()
+
     app = init_app()
-    web.run_app(app, host='0.0.0.0', port=8080)
+    web.run_app(app, host=args.host, port=args.port)
